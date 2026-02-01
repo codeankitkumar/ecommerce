@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product Store</title>
+<style>
+body {
+  font-family: Arial;
+  padding: 20px;
+  background: #fafafa;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+select {
+  padding: 6px;
+  margin-right: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background: white;
+  border-radius: 6px;
+}
+
+.card h3 {
+  margin: 0;
+}
+
+.rating {
+  color: orange;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Product Store</h1>
+
+<div class="controls">
+  <select id="sort">
+    <option value="">Sort</option>
+    <option value="priceAsc">Price ↑</option>
+    <option value="priceDesc">Price ↓</option>
+    <option value="nameAsc">Name A-Z</option>
+    <option value="nameDesc">Name Z-A</option>
+    <option value="ratingAsc">Rating ↑</option>
+    <option value="ratingDesc">Rating ↓</option>
+  </select>
+
+  <select id="filter">
+    <option value="all">All Categories</option>
+    <option value="electronics">Electronics</option>
+    <option value="clothing">Clothing</option>
+    <option value="books">Books</option>
+    <option value="home">Home</option>
+  </select>
+</div>
+
+<div class="grid" id="products"></div>
+
+<script>
+const data = [
+  {name:"Laptop", price:900, rating:5, category:"electronics"},
+  {name:"Phone", price:600, rating:4, category:"electronics"},
+  {name:"Headphones", price:80, rating:3, category:"electronics"},
+  {name:"Camera", price:500, rating:4, category:"electronics"},
+  {name:"T-Shirt", price:20, rating:3, category:"clothing"},
+  {name:"Jeans", price:50, rating:4, category:"clothing"},
+  {name:"Jacket", price:100, rating:5, category:"clothing"},
+  {name:"Shoes", price:70, rating:4, category:"clothing"},
+  {name:"Novel", price:15, rating:5, category:"books"},
+  {name:"Cookbook", price:25, rating:4, category:"books"},
+  {name:"Dictionary", price:30, rating:3, category:"books"},
+  {name:"Comics", price:10, rating:4, category:"books"},
+  {name:"Chair", price:40, rating:4, category:"home"},
+  {name:"Table", price:120, rating:5, category:"home"},
+  {name:"Lamp", price:25, rating:3, category:"home"},
+  {name:"Clock", price:18, rating:4, category:"home"},
+  {name:"Blender", price:60, rating:5, category:"home"},
+  {name:"Monitor", price:200, rating:4, category:"electronics"},
+  {name:"Sweater", price:35, rating:3, category:"clothing"},
+  {name:"Notebook", price:5, rating:4, category:"books"}
+];
+
+let products = [...data];
+
+function render(list) {
+  const container = document.getElementById("products");
+  container.innerHTML = "";
+
+  list.forEach(p => {
+    container.innerHTML += `
+      <div class="card">
+        <h3>${p.name}</h3>
+        <p>Price: $${p.price}</p>
+        <p class="rating">Rating: ${"★".repeat(p.rating)}</p>
+        <p>Category: ${p.category}</p>
+      </div>
+    `;
+  });
+}
+
+document.getElementById("sort").onchange = function() {
+  const val = this.value;
+
+  if (val === "priceAsc") products.sort((a,b)=>a.price-b.price);
+  if (val === "priceDesc") products.sort((a,b)=>b.price-a.price);
+  if (val === "nameAsc") products.sort((a,b)=>a.name.localeCompare(b.name));
+  if (val === "nameDesc") products.sort((a,b)=>b.name.localeCompare(a.name));
+  if (val === "ratingAsc") products.sort((a,b)=>a.rating-b.rating);
+  if (val === "ratingDesc") products.sort((a,b)=>b.rating-a.rating);
+
+  render(products);
+};
+
+document.getElementById("filter").onchange = function() {
+  const cat = this.value;
+
+  if (cat === "all") {
+    products = [...data];
+  } else {
+    products = data.filter(p => p.category === cat);
+  }
+
+  render(products);
+};
+
+render(products);
+</script>
+
+</body>
+</html>
