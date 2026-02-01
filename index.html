@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mini Product Store</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f2f2f2;
+}
+
+h1 {
+  text-align: center;
+}
+
+.controls {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+select {
+  padding: 8px;
+  margin: 5px;
+  font-size: 14px;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.price {
+  font-weight: bold;
+  color: green;
+}
+
+.rating {
+  color: orange;
+}
+
+.category {
+  font-size: 12px;
+  color: gray;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Mini Product Store</h1>
+
+<div class="controls">
+  <select id="sortSelect">
+    <option value="">Sort Products</option>
+    <option value="priceLow">Price: Low → High</option>
+    <option value="priceHigh">Price: High → Low</option>
+    <option value="nameAZ">Name: A → Z</option>
+    <option value="nameZA">Name: Z → A</option>
+    <option value="ratingLow">Rating: Low → High</option>
+    <option value="ratingHigh">Rating: High → Low</option>
+  </select>
+
+  <select id="filterSelect">
+    <option value="all">All Categories</option>
+    <option value="electronics">Electronics</option>
+    <option value="fashion">Fashion</option>
+    <option value="books">Books</option>
+    <option value="home">Home</option>
+  </select>
+</div>
+
+<div class="products" id="productList"></div>
+
+<script>
+const allProducts = [
+  {name:"Laptop", price:900, rating:5, category:"electronics"},
+  {name:"Phone", price:600, rating:4, category:"electronics"},
+  {name:"Speaker", price:120, rating:4, category:"electronics"},
+  {name:"Monitor", price:200, rating:3, category:"electronics"},
+  {name:"T-Shirt", price:25, rating:3, category:"fashion"},
+  {name:"Jeans", price:60, rating:4, category:"fashion"},
+  {name:"Jacket", price:120, rating:5, category:"fashion"},
+  {name:"Shoes", price:80, rating:4, category:"fashion"},
+  {name:"Novel", price:15, rating:5, category:"books"},
+  {name:"Dictionary", price:35, rating:3, category:"books"},
+  {name:"Cookbook", price:22, rating:4, category:"books"},
+  {name:"Notebook", price:5, rating:4, category:"books"},
+  {name:"Chair", price:45, rating:4, category:"home"},
+  {name:"Table", price:150, rating:5, category:"home"},
+  {name:"Lamp", price:30, rating:3, category:"home"},
+  {name:"Clock", price:20, rating:4, category:"home"},
+  {name:"Blender", price:70, rating:5, category:"home"},
+  {name:"Fan", price:55, rating:3, category:"home"},
+  {name:"Tablet", price:300, rating:4, category:"electronics"},
+  {name:"Sweater", price:40, rating:3, category:"fashion"}
+];
+
+let visibleProducts = [...allProducts];
+
+function showProducts(list) {
+  const container = document.getElementById("productList");
+  container.innerHTML = "";
+
+  list.forEach(p => {
+    const stars = "★".repeat(p.rating);
+    container.innerHTML += `
+      <div class="card">
+        <h3>${p.name}</h3>
+        <p class="price">$${p.price}</p>
+        <p class="rating">${stars}</p>
+        <p class="category">${p.category}</p>
+      </div>
+    `;
+  });
+}
+
+document.getElementById("filterSelect").onchange = function() {
+  const cat = this.value;
+
+  if (cat === "all") {
+    visibleProducts = [...allProducts];
+  } else {
+    visibleProducts = allProducts.filter(p => p.category === cat);
+  }
+
+  showProducts(visibleProducts);
+};
+
+document.getElementById("sortSelect").onchange = function() {
+  const type = this.value;
+
+  if (type === "priceLow") visibleProducts.sort((a,b)=>a.price-b.price);
+  if (type === "priceHigh") visibleProducts.sort((a,b)=>b.price-a.price);
+  if (type === "nameAZ") visibleProducts.sort((a,b)=>a.name.localeCompare(b.name));
+  if (type === "nameZA") visibleProducts.sort((a,b)=>b.name.localeCompare(a.name));
+  if (type === "ratingLow") visibleProducts.sort((a,b)=>a.rating-b.rating);
+  if (type === "ratingHigh") visibleProducts.sort((a,b)=>b.rating-a.rating);
+
+  showProducts(visibleProducts);
+};
+
+showProducts(visibleProducts);
+</script>
+
+</body>
+</html>
